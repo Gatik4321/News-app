@@ -1,0 +1,117 @@
+<!-- While making this application we will understand how to work with APIs -->
+<!-- So lets get started -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /*CSS Section for our newsapp*/
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0px;
+            padding: 0px;
+            background-color: #c5c5c5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            /* margin auto is used to placed the things in center*/
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding:0px;
+        }
+        li{
+            margin-bottom:20px;
+            border-bottom:1px solid #ddd;
+            padding-bottom:20px;
+        }
+        p{
+            color:#555;
+        }
+        a{
+            color:#007bff;
+            text-decoration:none;
+        }
+        a:hover{
+            text-decoration:underline;
+        }
+        h5{
+            color:rgb(177, 174, 174);
+        }
+        h5:hover{
+            color:rgb(180,180,180);
+            cursor:pointer;
+        }
+        .btn{
+            padding:10px 13px;
+            border-radius:10px;
+            background-color:rgb(21, 5, 5);
+            color:white;
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>TechCrunch News</h1>
+        <ul id="news-list"></ul>
+        <button onclick="deletion()" class="btn">For Deletion</button>
+    </div>
+</body>
+<script>
+    fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftechcrunch.com%2Ffeed%2F').
+    then((response)=>{
+        if(!response.ok){
+            throw new Error('Network response was not ok'+response.statusText);
+        }
+        else{
+            return response.json();
+        }
+    }).then(data => {
+        const newsList = document.getElementById('news-list');
+        data.items.forEach(item => {
+            const li = document.createElement('li');
+            const h2 = document.createElement('h2');
+            const a = document.createElement('a');
+            const h5=document.createElement('h5');
+            h2.textContent = item.title;
+            h5.textContent=item.author;
+            a.textContent = 'Read more';
+            a.href = item.link;
+            a.target = '_blank';
+            li.appendChild(h2);
+            li.appendChild(h5)
+            li.appendChild(document.createTextNode(item.description));
+            li.appendChild(a);
+            newsList.appendChild(li);
+        });
+    }).catch((error)=>{
+        console.log('There was a problem with fetch operation',error);
+    })
+
+    function deletion(){
+        const ul=document.getElementById("news-list");
+        const ans=ul.firstChild;
+        ans.remove();
+    }
+</script>
+</html>
+
+
+<!-- First task that we are performing is that updating by adding the author name -->
